@@ -5,11 +5,11 @@
   "main"          : "server.js",
   "author"        : "Maryam via Scotch",
   "dependencies"  : {
-    // "body-parser"     : "^1.4.3",
-    "express"         : "3.4.4",
-    // "method-override" : "^2.1.3",
-    "mongoose"        : "^3.6.2",
-    // "morgan"          : "^1.1.1"
+    "body-parser"     : "^1.4.3",
+    "express"         : "4.13.4",
+    "method-override" : "^2.1.3",
+    "mongoose"        : "^4.4.12",
+    "morgan"          : "^1.1.1"
 
   }
 
