@@ -7,8 +7,10 @@ var app             = express();
 
 //mongodb
 var mongoose        = require('mongoose');
-//log requests to console
-var morgan          = require('morgan');
+var port            = process.env.PORT || 8080;
+var database        = require('./config/database');
+  //log requests to console
+  var morgan          = require('morgan');
 //pull info from HTML(express4)
 var bodyParser      = require('body-parser');
 //simulate Delete and Put
@@ -22,9 +24,10 @@ var methodOverride  = require('method-override');
 
 
 
-//configuration
+//configuration --- MOVED to config/database.js
 
-mongoose.connect('mongodb:node@mongo.onmodulus.net:27017/uw03mypu');
+//connect to mongoDB
+mongoose.connect(database.url);
 //sets static file location
 app.use(express.static(__dirname + '/public'));
 //logs every request to console
@@ -38,66 +41,67 @@ app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 app.use(methodOverride());
 
 
+// //define model -- MOVED to app/models/todo.js
+// var Todo  = mongoose.model('Todo', {
+//   text  : String,
+//   done: Boolean
+// });
 
-var Todo  = mongoose.model('Todo', {
-  text  : String
-});
 
-
-// routes
+// routes --- MOVED to app/routes/.js
   //api
   // get all todos
 // require('./app/routes.js')(app);
-  app.get('/api/todos', function(req, res) {
+  // app.get('/api/todos', function(req, res) {
     
-    //use mongoose
-    Todo.find(function(err, todos) {
+  //   //use mongoose
+  //   Todo.find(function(err, todos) {
       
-      //if error, send the error
-      if (err)
-        res.send(err)
+  //     //if error, send the error
+  //     if (err)
+  //       res.send(err)
 
-      res.json(todos);
-    });
-  });
+  //     res.json(todos);
+  //   });
+  // });
 
-  //create todo and send back all created todos
-  app.post('/api/todos', function(req, res){
+  // //create todo and send back all created todos
+  // app.post('/api/todos', function(req, res){
 
-    //create todo, info from AJAX from angular
-    Todo.create({
-      text  : req.body.text,
-      done  : false
+  //   //create todo, info from AJAX from angular
+  //   Todo.create({
+  //     text  : req.body.text,
+  //     done  : false
 
-    }, function(err, todo){
-      if (err)
-        res.send(err);
+  //   }, function(err, todo){
+  //     if (err)
+  //       res.send(err);
 
-      //get and return all todos after each new one
-      Todo.find(function(err, todos){
-        if (err)
-          res.send(err)
-        res.json(todos);
-      });
-    });
-  });
+  //     //get and return all todos after each new one
+  //     Todo.find(function(err, todos){
+  //       if (err)
+  //         res.send(err)
+  //       res.json(todos);
+  //     });
+  //   });
+  // });
 
-  //delete a todo
-  app.delete('/api/todos/:todo_id', function(req, res) {
-    Todo.remove({
-      _id : req.params.todo_id
-    }, function(err, todo){
-      if (err)
-        res.send(err);
+  // //delete a todo
+  // app.delete('/api/todos/:todo_id', function(req, res) {
+  //   Todo.remove({
+  //     _id : req.params.todo_id
+  //   }, function(err, todo){
+  //     if (err)
+  //       res.send(err);
 
-      //get and return all todos after each new one
-      Todo.find(function(err, todos){
-        if (err)
-          res.send(err)
-        res.json(todos);
-      });
-    });
-  });
+  //     //get and return all todos after each new one
+  //     Todo.find(function(err, todos){
+  //       if (err)
+  //         res.send(err)
+  //       res.json(todos);
+  //     });
+  //   });
+  // });
 
   // //application
   // app.get('*', function(req, res){
@@ -105,7 +109,10 @@ var Todo  = mongoose.model('Todo', {
   //   res.sendFile('./public/index.html');
   // });
 
+
+//  new routes
+require('./app/routes.js')(app);
 //start server.js
 
-app.listen(8080);
-console.log("App listening on port 8080");
+app.listen(port);
+console.log("Hi from server.js App listening on port " + port);

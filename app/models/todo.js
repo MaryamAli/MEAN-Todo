@@ -1,6 +1,8 @@
-// var mongoose = require('mongoose');
+//load mongoose --- needed to define a model
 
-// module.exports = mongoose.model('Todo', {
-//   text  : String,
-//   done  : Boolean
-// });
+var mongoose = require('mongoose');
+
+module.exports = mongoose.model('Todo', {
+  text  : String,
+  done  : Boolean
+});
