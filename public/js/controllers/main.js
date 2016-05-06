@@ -1,32 +1,32 @@
 angular.module('todoController', [])
  
- .controller('mainController', function($scope, $http){
+ .controller('mainController', function($scope, $http, Todos){
   $scope.formData = {};
+  //GET
 
-  $http.get('/api/todos')
+  Todos.get()
     .success(function(data){
       $scope.todos = data;
-    })
-    .error(function(data){
-      console.log('Error: ' + data);
     });
+
+  //CREATE
   $scope.createTodo = function() {
-    $http.post('/api/todos', $scope.formData)
+    if($scope.formData.text != undefined){
+      Todos.create($scope.formData)
+      //if successful
       .success(function(data){
         $scope.formData = {}; //clears form
         $scope.todos = data;
-      })
-      .error(function(data){
-        console.log('Error: ' + data);
       });
+    }
   };
+
+  //DELETE
   $scope.deleteTodo = function(id){
-    $http.delete('/api/todos' + id)
+    Todos.delete(id)
+      //call all new todos
       .success(function(data){
         $scope.todos = data;
-      })
-      .error(function(data){
-        console.log('Error: ' + data);
       });
   };
  });
